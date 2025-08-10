@@ -4,6 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useContext } from 'react'
 import { ChatContext } from '../context/ChatContext'
 import { useOllama } from '../hooks/useOllama'
+import '../ChatBot.css'
 
 const schema = yup.object({
   userInput: yup
@@ -46,31 +47,28 @@ export const ChatBot = () => {
   }
 
   return (
-    <>
+    <div className='chat-container'>
+
+      <div className='chat-messages'>
+        {state.messages.map((msg, index) => (
+          <div
+            key={index}
+            className={`message ${msg.from === 'user' ? 'user' : 'bot'}`}
+          >
+            {msg.text}
+          </div>
+        ))}
+        {state.loading && <p className='loading'>Generando respuesta 🚀</p>}
+      </div>
       <form onSubmit={handleSubmit(handlePregunta)}>
         <input
           type='text'
           {...register('userInput')}
-          className='w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+          placeholder='Escribe tu mensaje...'
         />
-        {errors.userInput && <p>{errors.userInput.message}</p>}
-        <button
-          className='className={`w-full px-4 py-2 rounded trasnsition cursor-pointer bg-blue-500 hover:bg-blue-600`}'
-        >Preguntar
-        </button>
+        <button type='submit'>Preguntar</button>
       </form>
-      {/* <div>
-        <p>{loading ? 'Cargando...' : response}</p>
-      </div> */}
-      <div>
-        {state.messages.map((message, index) => (
-          <p key={index}>
-            <strong>{message.from === 'user' ? 'Tú: ' : 'Llama2: '}</strong>
-            {message.text}
-          </p>
-        ))}
-        {state.loading && <p>Generando respuesta...</p>}
-      </div>
-    </>
+      {errors.userInput && <p>{errors.userInput.message}</p>}
+    </div>
   )
 }
