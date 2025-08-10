@@ -12,24 +12,6 @@ const schema = yup.object({
     .required('El Mensaje es requerido'),
 })
 
-const initialState = {
-  messages: []
-}
-
-const chatReducer = (state, action) => {
-  switch (action.type) {
-    case 'ADD_MESSAGE':
-      return {
-        ...state,
-        messages: [...state.messages, action.payload]
-      }
-    case 'reset':
-      return initialState
-    default:
-      return state
-  }
-}
-
 export const App = () => {
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema)
@@ -37,38 +19,10 @@ export const App = () => {
   // Guarda la respuesta de llama2
   const [response, setResponse] = useState('')
   const [loading, setLoading] = useState(false)
-  const [state, dispatch] = useReducer(chatReducer, initialState)
+
   const handlePregunta = async (data) => {
     console.log(data)
     setLoading(true)
-    try {
-      const res = await axios.post('http://localhost:11434/api/generate', {
-        model: 'llama2',
-        prompt: data.userInput,
-        stream: false
-      })
-      setResponse(res.data.response)
-      // Dispatch para guardar el mensaje del usuario
-      dispatch({
-        type: 'ADD_MESSAGE',
-        payload: {
-          from: 'user',
-          text: data.userInput
-        }
-      })
-      // Dispatch para guardar la respuesta de llama2
-      dispatch({
-        type: 'ADD_MESSAGE',
-        payload: {
-          from: 'llama2',
-          text: res.data.response
-        }
-      })
-    } catch (error) {
-      console.error('error: ', error)
-    } finally {
-      setLoading(false)
-    }
   }
 
   return (
