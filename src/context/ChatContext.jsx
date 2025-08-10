@@ -1,4 +1,4 @@
-import { useReducer } from 'react'
+import { createContext, useReducer } from 'react'
 
 // 1. Crear el contexto global
 export const ChatContext = createContext()
@@ -19,24 +19,6 @@ const chatReducer = (state, action) => {
       return state
   }
 }
-/*
-// Dispatch para guardar el mensaje del usuario
-      dispatch({
-        type: 'ADD_MESSAGE',
-        payload: {
-          from: 'user',
-          text: userPrompt
-        }
-      })
-      // Dispatch para guardar la respuesta de llama2
-      dispatch({
-        type: 'ADD_MESSAGE',
-        payload: {
-          from: 'llama2',
-          text: res.data.response
-        }
-      })
-*/
 
 // 2. Crear el provider
 export const ChatProvider = ({ children }) => {
